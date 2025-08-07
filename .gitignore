@@ -1,0 +1,28 @@
+# Node modules
+node_modules/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Environment variables
+.env
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor configs
+.vscode/
+.idea/
+
+# Database (caso use SQLite temporariamente ou backups locais)
+*.sqlite
+*.db
+*.sql
+
+# Optional: logs ou arquivos gerados
+logs/
+*.log
