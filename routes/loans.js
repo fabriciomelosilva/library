@@ -2,17 +2,14 @@ const express = require('express');
 const router = express.Router();
 const db = require('../db');
 
-// Registrar empréstimo
 router.post('/', async (req, res) => {
-  const { book_id, borrower_name, return_date } = req.body;
+  const { book_id, borrower_name, requester_contact, additional_notes, return_date } = req.body;
   try {
-    // Criar empréstimo
     const result = await db.query(
-      'INSERT INTO loans (book_id, borrower_name, return_date) VALUES ($1, $2, $3) RETURNING *',
-      [book_id, borrower_name, return_date]
+      'INSERT INTO loans (book_id, borrower_name, requester_contact, additional_notes, return_date) VALUES ($1, $2, $3, $4, $5) RETURNING *',
+      [book_id, borrower_name, requester_contact, additional_notes, return_date]
     );
 
-    // Atualizar livro para indisponível
     await db.query(
       'UPDATE books SET is_available = false WHERE id = $1',
       [book_id]
@@ -25,8 +22,6 @@ router.post('/', async (req, res) => {
   }
 });
 
-
-// Listar todos os empréstimos
 router.get('/', async (req, res) => {
   try {
     const result = await db.query(`
@@ -41,10 +36,8 @@ router.get('/', async (req, res) => {
   }
 });
 
-// Marcar devolução
 router.put('/:id/return', async (req, res) => {
   try {
-    // Atualizar empréstimo para returned = true
     const result = await db.query(
       'UPDATE loans SET returned = true WHERE id = $1 RETURNING *',
       [req.params.id]
@@ -54,7 +47,6 @@ router.put('/:id/return', async (req, res) => {
       return res.status(404).json({ error: 'Empréstimo não encontrado' });
     }
 
-    // Atualizar livro para disponível
     const book_id = result.rows[0].book_id;
     await db.query(
       'UPDATE books SET is_available = true WHERE id = $1',
@@ -67,6 +59,5 @@ router.put('/:id/return', async (req, res) => {
     res.status(500).json({ error: 'Erro ao marcar devolução' });
   }
 });
-
 
 module.exports = router;

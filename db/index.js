@@ -14,6 +14,10 @@ async function initDB() {
         title TEXT NOT NULL,
         author TEXT NOT NULL,
         year INTEGER,
+        description TEXT,
+        image_url TEXT,
+        responsible TEXT,
+        contact TEXT,
         is_available BOOLEAN DEFAULT true
       );
     `);
@@ -23,15 +27,17 @@ async function initDB() {
         id SERIAL PRIMARY KEY,
         book_id INTEGER REFERENCES books(id) ON DELETE CASCADE,
         borrower_name TEXT NOT NULL,
+        requester_contact TEXT,
+        additional_notes TEXT,
         borrow_date DATE NOT NULL DEFAULT CURRENT_DATE,
         return_date DATE,
         returned BOOLEAN DEFAULT false
       );
     `);
 
-    console.log('✅ Tabelas "books" e "loans" verificadas/criadas');
+    console.log('✅ Tables "books" and "loans" checked/created');
   } catch (err) {
-    console.error('❌ Erro ao criar tabelas:', err);
+    console.error('❌ Error creating tables:', err);
   }
 }
 
